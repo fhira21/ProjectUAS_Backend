@@ -14,7 +14,7 @@ const db = mongoose.connection;
 db.on('error', (error) => console.log(error));
 db.once('open', () => console.log('Database Connected...'));
 
-const allowedOrigins = ['http://example1.com', 'http://example2.com'];
+const allowedOrigins = ['https://project-uas-backend.vercel.app', 'https://project-uas-frontend-dun.vercel.app/'];
 
 app.use(cors({
   origin: function (origin, callback) {
