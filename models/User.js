@@ -6,6 +6,6 @@ const userSchema = new mongoose.Schema({
   // You can add more fields like email, name, etc., as per your requirements
 });
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("Auth", userSchema);
 
 export default User;
