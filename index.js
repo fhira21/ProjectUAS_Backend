@@ -2,34 +2,29 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import UserRoute from "./routes/UserRoute.js";
+import authRoutes from "./routes/authRoutes.js";
 
 const app = express();
 
-mongoose.connect('mongodb+srv://fhiramaulani2105:Ftm210503_@cluster0.w4htdpk.mongodb.net/?retryWrites=true&w=majority', {
+// Connect to MongoDB using Mongoose
+mongoose.connect('mongodb+srv://fhiramaulani2105:Ftm210503_@cluster0.w4htdpk.mongodb.net/mydatabase?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true
-});
+})
+.then(() => console.log('Database Connected...'))
+.catch((error) => console.log(error));
 
-const db = mongoose.connection;
-db.on('error', (error) => console.log(error));
-db.once('open', () => console.log('Database Connected...'));
+const allowedOrigins = ['https://project-uas-backend.vercel.app', 'https://project-uas-frontend-dun.vercel.app', 'http://localhost:3000'];
 
-const allowedOrigins = ['https://project-uas-backend.vercel.app', 'https://project-uas-frontend-dun.vercel.app/'];
+const corsOptions = {
+  origin: allowedOrigins,
+};
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Origin tidak diizinkan oleh CORS'));
-    }
-  },
-  allowedHeaders: ['X-Requested-With', 'Content-Type', 'Authorization'],
-  allowedMethods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  credentials: true,
-}));
-
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(UserRoute);
 
-app.listen(5000, () => console.log('Server up and running...'));
+// Use the UserRoute middleware
+app.use(UserRoute);
+app.use(authRoutes);
+
+app.listen(5000, () => console.log('Server up and running on port 5000...'));
